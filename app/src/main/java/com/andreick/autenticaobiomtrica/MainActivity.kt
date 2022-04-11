@@ -1,38 +1,122 @@
 package com.andreick.autenticaobiomtrica
 
+import android.Manifest
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.andreick.autenticaobiomtrica.databinding.ActivityMainBinding
-import org.opencv.android.CameraBridgeViewBase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.opencv.android.OpenCVLoader
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 
-class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListener2 {
+
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var fingerprintDetection: FingerprintDetectionJava
+    private lateinit var fingerprintMatcher: FingerprintMatcherJava
     private lateinit var cameraFrame: Mat
-    private lateinit var maskSize: Size
-    private var croppedCameraFrame: Mat? = null
+    private val matList: MutableList<Mat> = mutableListOf()
+
+    private val requestPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            permissions ->
+        for ((permissionName, isGranted) in permissions.entries) {
+            when (permissionName) {
+                Manifest.permission.READ_EXTERNAL_STORAGE -> {
+                    if (isGranted) {
+                        val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        openGalleryLauncher.launch(pickIntent)
+                    }
+                    else Toast.makeText(
+                        this, "Permission denied for fine location", Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    private val openGalleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result ->
+        if (result.resultCode == RESULT_OK) {
+            val uri = result.data?.data ?: return@registerForActivityResult
+            val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
+
+            cameraFrame = bitmap.toMat()
+
+            /*val center = Point(cameraFrame.width() / 2.0, cameraFrame.height() / 2.0)
+            val axes = Size(cameraFrame.width() * 0.4, cameraFrame.height() * 0.28)
+            val thickness = -1
+            val lineType = 8
+
+            val scalarWhite = Scalar(255.0, 255.0, 255.0)
+            val scalarGray = Scalar(100.0, 100.0, 100.0)
+            val scalarBlack = Scalar(0.0, 0.0, 0.0)
+
+            val roi = Mat(cameraFrame.height(), cameraFrame.width(), CvType.CV_8UC1)
+            roi.setTo(scalarWhite)
+            Imgproc.ellipse(roi, center, axes, 0.0, 0.0, 360.0, scalarBlack, thickness, lineType, 0)
+            cameraFrame.setTo(scalarGray, roi)
+
+            val colStart = (cameraFrame.width() - axes.width * 2) / 2
+            val rowStart = (cameraFrame.height() - axes.height * 2) / 2
+            cameraFrame = cameraFrame.submat(
+                Rect(
+                    colStart.toInt(),
+                    rowStart.toInt(),
+                    axes.width.toInt() * 2,
+                    axes.height.toInt() * 2
+                )
+            )
+
+            mask = Mat(cameraFrame.rows(), cameraFrame.cols(), CvType.CV_8UC1, scalarBlack)
+            Imgproc.ellipse(roi, center, axes, 0.0, 0.0, 360.0, scalarWhite, thickness, lineType, 0)*/
+
+            binding.ivImg.setImageBitmap(cameraFrame.toBitmap())
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.openCvCamera.setCvCameraViewListener(this)
+        fingerprintDetection = FingerprintDetectionJava()
+        fingerprintMatcher = FingerprintMatcherJava()
 
-        binding.openCvCamera.setOnClickListener { takeSnapShot() }
+        binding.btnRetake.setOnClickListener { requestStoragePermission() }
+
         binding.btnProcess.setOnClickListener {
-            croppedCameraFrame?.let {
-                binding.pbProcess.visibility = View.VISIBLE
-                val result = FingerprintProcessor(it).processImage()
-                binding.pbProcess.visibility = View.INVISIBLE
-                binding.ivImg.setImageBitmap(result.toBitmap())
+            binding.pbProcess.visibility = View.VISIBLE
+            CoroutineScope(Dispatchers.Default).launch {
+                val result = fingerprintDetection.processImage(cameraFrame)
+                matList.add(result)
+                runOnUiThread {
+                    binding.ivImg.setImageBitmap(result.toBitmap())
+                    binding.pbProcess.visibility = View.GONE
+                }
+            }
+        }
+
+        binding.btnMatch.setOnClickListener {
+            binding.pbProcess.visibility = View.VISIBLE
+            CoroutineScope(Dispatchers.Default).launch {
+                val mat = fingerprintDetection.processImage(cameraFrame)
+                for (dbMat in matList) {
+                    val score = fingerprintMatcher.matching(mat, dbMat)
+                    Log.d(TAG, "$score")
+                }
+                runOnUiThread {
+                    binding.pbProcess.visibility = View.GONE
+                }
             }
         }
     }
@@ -41,7 +125,6 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
         super.onResume()
         if (OpenCVLoader.initDebug()) {
             Log.i("MainActivity", "OpenCV loaded successfully")
-            binding.openCvCamera.enableView()
         }
         else {
             Log.e("MainActivity", "OpenCV failed to load")
@@ -49,78 +132,12 @@ class MainActivity : AppCompatActivity(), CameraBridgeViewBase.CvCameraViewListe
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        binding.openCvCamera.disableView()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binding.openCvCamera.disableView()
-    }
-
-    override fun onCameraViewStarted(width: Int, height: Int) {
-        binding.openCvCamera.setFocusMode(this, 5)
-        binding.openCvCamera.cameraDistance
-        maskSize = Size(width * 0.3, height * 0.28)
-    }
-
-    override fun onCameraViewStopped() {
-        cameraFrame.release()
-    }
-
-    override fun onCameraFrame(inputFrame: CameraBridgeViewBase.CvCameraViewFrame): Mat {
-        cameraFrame = inputFrame.rgba().apply { drawEllipse(this) }
-        return cameraFrame
-    }
-
-    private fun drawEllipse(mat: Mat) {
-        /*Log.d(TAG, "${mat.height()}")
-        Log.d(TAG, "${mat.width()}")
-        Log.d(TAG, "${openCvCamera.width}")
-        Log.d(TAG, "${openCvCamera.height}")*/
-        val center = Point(mat.width() / 2.0, mat.height() / 2.0)
-        val axes = maskSize
-        val thickness = 2
-        val lineType = 8
-        Imgproc.ellipse(mat, center, axes, 0.0, 0.0, 360.0, Scalar(0.0, 173.0, 142.0), thickness, lineType, 0)
-    }
-
-    private fun takeSnapShot() {
-        val frameGrayScale = Mat(cameraFrame.height(), cameraFrame.width(), CvType.CV_8UC1)
-        Imgproc.cvtColor(cameraFrame, frameGrayScale, Imgproc.COLOR_RGB2GRAY)
-
-        val center = Point(cameraFrame.width() / 2.0, cameraFrame.height() / 2.0)
-        val axes = maskSize
-        val thickness = -1
-        val lineType = 8
-
-        val scalarWhite = Scalar(255.0, 255.0, 255.0)
-        val scalarGray = Scalar(100.0, 100.0, 100.0)
-        val scalarBlack = Scalar(0.0, 0.0, 0.0)
-
-        val roi = Mat(cameraFrame.height(), cameraFrame.width(), CvType.CV_8UC1)
-        roi.setTo(scalarWhite)
-        Imgproc.ellipse(roi, center, axes, 0.0, 0.0, 360.0, scalarBlack, thickness, lineType, 0)
-        frameGrayScale.setTo(scalarGray, roi)
-
-        val colStart = (cameraFrame.width() - axes.width * 2) / 2
-        val rowStart = (cameraFrame.height() - axes.height * 2) / 2
-        croppedCameraFrame = frameGrayScale.submat(
-            Rect(
-                colStart.toInt(),
-                rowStart.toInt(),
-                axes.width.toInt() * 2,
-                axes.height.toInt() * 2
-            )
+    private fun requestStoragePermission() {
+        val storagePermissionArray = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-
-        binding.ivImg.setImageBitmap(croppedCameraFrame?.toBitmap())
-        binding.openCvCamera.disableView()
-        binding.ivImg.visibility = View.VISIBLE
-        binding.btnProcess.visibility = View.VISIBLE
-        binding.btnRetake.visibility = View.VISIBLE
-        binding.openCvCamera.visibility = View.GONE
+        requestPermissions.launch(storagePermissionArray)
     }
 
     companion object {

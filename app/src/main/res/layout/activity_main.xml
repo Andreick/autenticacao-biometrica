@@ -6,20 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.andreick.autenticaobiomtrica.CameraView
-        android:id="@+id/open_cv_camera"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/iv_img"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btn_process"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,21 +31,26 @@
         android:layout_width="120dp"
         android:layout_height="60dp"
         android:text="Process"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btn_retake"
-        tools:visibility="visible" />
+        app:layout_constraintEnd_toEndOf="@id/btn_match"
+        app:layout_constraintStart_toEndOf="@id/btn_retake" />
 
     <Button
         android:id="@+id/btn_retake"
         android:layout_width="120dp"
         android:layout_height="60dp"
         android:text="Retake"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btn_process"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_match"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:text="Match"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_process"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
