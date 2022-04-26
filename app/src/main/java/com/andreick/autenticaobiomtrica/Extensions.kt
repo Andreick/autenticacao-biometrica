@@ -1,10 +1,29 @@
 package com.andreick.autenticaobiomtrica
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.view.View
+import android.widget.Toast
 import androidx.camera.core.ImageProxy
 import org.opencv.android.Utils
 import org.opencv.core.Mat
+
+fun Context.showToast(text: String) {
+    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+}
+
+fun View.visible() {
+    visibility = View.VISIBLE
+}
+
+fun View.invisible() {
+    visibility = View.INVISIBLE
+}
+
+fun View.gone() {
+    visibility = View.GONE
+}
 
 fun ImageProxy.toMat(): Mat = toBitmap().toMat()
 

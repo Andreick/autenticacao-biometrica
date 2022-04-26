@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">Autenticação Biométrica</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ministerio_do_meio_ambiente">Ministério do Meio Ambiente</string>
+    <string name="register_fingerprint">Cadastrar Digital</string>
+    <string name="login">Entrar</string>
+    <string name="retake">Tirar outra foto</string>
+    <string name="confirm">Confirmar</string>
+    <string name="process">Processar</string>
+    <string name="register">Registrar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="name">Nome</string>
 </resources>

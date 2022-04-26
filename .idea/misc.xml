@@ -4,6 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/activity_test.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/dialog_user_details.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/fragment_fingerprint.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/fragment_item_list.xml" value="0.17395833333333333" />
       </map>
     </option>
