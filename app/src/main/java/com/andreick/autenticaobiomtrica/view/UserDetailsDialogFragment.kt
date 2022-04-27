@@ -8,7 +8,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.andreick.autenticaobiomtrica.R
 import com.andreick.autenticaobiomtrica.databinding.FragmentUserDetailsBinding
-import com.andreick.autenticaobiomtrica.showToast
+import com.andreick.autenticaobiomtrica.extensions.showToast
 
 class UserDetailsDialogFragment : DialogFragment() {
 

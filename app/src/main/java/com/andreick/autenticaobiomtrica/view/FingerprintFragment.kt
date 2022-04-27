@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.andreick.autenticaobiomtrica.*
 import com.andreick.autenticaobiomtrica.databinding.FragmentFingerprintBinding
+import com.andreick.autenticaobiomtrica.extensions.*
 import com.andreick.autenticaobiomtrica.viewmodel.FingerprintViewModel
 
 class FingerprintFragment : Fragment() {
@@ -27,7 +28,7 @@ class FingerprintFragment : Fragment() {
 
     private val viewModel: FingerprintViewModel by viewModels {
         FingerprintViewModel.Factory(FingerprintViewModel(
-            FingerprintDetectionJava()
+            FingerprintDetectionJava(), FingerprintMatcher()
         ))
     }
 
@@ -43,9 +44,9 @@ class FingerprintFragment : Fragment() {
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         )
                         openGalleryLauncher.launch(pickIntent)
-                        requireContext().showToast("Escolha a imagem da sua digital")
+                        showToast("Escolha a imagem da sua digital")
                     } else {
-                        requireContext().showToast("Permissão necessária para tirar a digital")
+                        showToast("Permissão necessária para tirar a digital")
                         findNavController().popBackStack()
                     }
                 }
@@ -98,10 +99,10 @@ class FingerprintFragment : Fragment() {
                 }
                 FingerprintViewModel.State.ProcessingFingerprint -> {
                     hideButtons()
-                    binding.pbProcessing.visible()
+                    loading()
                 }
                 is FingerprintViewModel.State.FingerprintProcessed -> {
-                    binding.pbProcessing.gone()
+                    loadingFinished()
                     binding.ivFingerprint.setImageBitmap(state.fingerprint)
                     showFingerprintProcessedButtons()
                 }
@@ -110,22 +111,42 @@ class FingerprintFragment : Fragment() {
                     findNavController().navigate(direction)
                 }
                 FingerprintViewModel.State.RegisteringFingerprint -> {
-                    binding.pbProcessing.visible()
+                    hideButtons()
+                    loading()
                 }
                 FingerprintViewModel.State.FingerprintRegistered -> {
-                    binding.pbProcessing.gone()
-                    requireContext().showToast("Digital registrada com sucesso")
-                    findNavController().popBackStack()
+                    onSuccess("Digital registrada com sucesso")
                 }
                 FingerprintViewModel.State.FingerprintRegisterFailed -> {
-                    binding.pbProcessing.gone()
-                    requireContext().showToast("Falha ao registrar a digital")
+                    onFail("Falha ao registrar a digital")
                 }
-                FingerprintViewModel.State.AnalyzingFingerprint -> TODO()
-                FingerprintViewModel.State.LoginAllowed -> TODO()
-                FingerprintViewModel.State.LoginDenied -> TODO()
+                FingerprintViewModel.State.AnalyzingFingerprint -> {
+                    hideButtons()
+                    loading()
+                }
+                is FingerprintViewModel.State.LoginAllowed -> {
+                    onSuccess("Bem vindo ${state.username}!")
+                }
+                FingerprintViewModel.State.LoginDenied -> {
+                    onFail("Sua digital não foi identificada, tente novamente")
+                }
+                FingerprintViewModel.State.LoginFailed -> {
+                    onFail("Falha ao identificar a sua digital")
+                }
             }
         }
+    }
+
+    private fun onSuccess(message: String) {
+        showToast(message)
+        findNavController().popBackStack()
+        enableInput()
+    }
+
+    private fun onFail(message: String) {
+        loadingFinished()
+        showToast(message)
+        showFingerprintProcessedButtons()
     }
 
     private fun setOnCLickListeners() {
@@ -149,6 +170,16 @@ class FingerprintFragment : Fragment() {
         findNavController().getBackStackEntry(R.id.fingerprintFragment)
             .savedStateHandle.getLiveData<String>("name")
             .observe(viewLifecycleOwner) { name -> viewModel.registerFingerprint(name) }
+    }
+
+    private fun loading() {
+        disableInput()
+        binding.pbProcessing.visible()
+    }
+
+    private fun loadingFinished() {
+        enableInput()
+        binding.pbProcessing.gone()
     }
 
     private fun hideButtons() {

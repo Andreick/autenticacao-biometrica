@@ -6,17 +6,13 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.andreick.autenticaobiomtrica.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.andreick.autenticaobiomtrica.extensions.toMat
 import org.opencv.android.OpenCVLoader
 import org.opencv.core.*
-import org.opencv.imgproc.Imgproc
 
 
 class TestActivity : AppCompatActivity() {
