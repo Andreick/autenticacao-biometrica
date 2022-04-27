@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.andreick.autenticaobiomtrica.Action
-import com.andreick.autenticaobiomtrica.R
+import com.andreick.autenticaobiomtrica.UserAction
 import com.andreick.autenticaobiomtrica.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -29,11 +28,11 @@ class HomeFragment : Fragment() {
 
     private fun setOnClickListeners() {
         binding.btnHomeRegister.setOnClickListener {
-            val action = HomeFragmentDirections.takeFingerprint(Action.REGISTER)
+            val action = HomeFragmentDirections.takeFingerprint(UserAction.REGISTER)
             findNavController().navigate(action)
         }
         binding.btnHomeLogin.setOnClickListener {
-            val action = HomeFragmentDirections.takeFingerprint(Action.LOGIN)
+            val action = HomeFragmentDirections.takeFingerprint(UserAction.LOGIN)
             findNavController().navigate(action)
         }
     }

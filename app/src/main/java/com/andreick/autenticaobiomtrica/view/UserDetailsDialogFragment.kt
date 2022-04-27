@@ -38,12 +38,10 @@ class UserDetailsDialogFragment : DialogFragment() {
                 dismiss()
             }
             else {
-                requireContext().showToast("Preencha o nome")
+                showToast("Preencha o nome")
             }
         }
 
-        binding.btnUserDetailsCancel.setOnClickListener {
-            dismiss()
-        }
+        binding.btnUserDetailsCancel.setOnClickListener { dismiss() }
     }
 }

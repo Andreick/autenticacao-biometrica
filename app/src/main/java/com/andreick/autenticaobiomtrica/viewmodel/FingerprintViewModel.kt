@@ -3,8 +3,9 @@ package com.andreick.autenticaobiomtrica.viewmodel
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.*
-import com.andreick.autenticaobiomtrica.*
-import com.andreick.autenticaobiomtrica.extensions.toBitmap
+import com.andreick.autenticaobiomtrica.FingerprintMatcher
+import com.andreick.autenticaobiomtrica.FingerprintProcessor
+import com.andreick.autenticaobiomtrica.UserAction
 import com.andreick.autenticaobiomtrica.extensions.toMat
 import com.andreick.autenticaobiomtrica.model.User
 import com.google.android.gms.tasks.Task
@@ -20,11 +21,9 @@ import org.opencv.core.Mat
 import org.opencv.core.MatOfByte
 import org.opencv.imgcodecs.Imgcodecs
 import java.io.ByteArrayOutputStream
-import java.lang.Exception
-import java.lang.RuntimeException
 
 class FingerprintViewModel(
-    private val fingerprintDetection: FingerprintDetectionJava,
+    private val fingerprintProcessor: FingerprintProcessor,
     private val fingerprintMatcher: FingerprintMatcher
 ) : ViewModel() {
 
@@ -47,26 +46,23 @@ class FingerprintViewModel(
         val fingerprint = fingerprint ?: return
         _state.value = State.ProcessingFingerprint
         viewModelScope.launch {
-            val fingerprintProcessed = run {
-                val fingerprintMat = fingerprint.toMat()
-                val fingerprintMatProcessed = fingerprintDetection.processImage(fingerprintMat)
-                fingerprintMatProcessed.toBitmap()
-            }
-            _state.value = State.FingerprintProcessed(fingerprintProcessed)
+            val (fingerprintProcessed, fingerprintVisualization) = fingerprintProcessor.processImage(fingerprint)
+            this@FingerprintViewModel.fingerprint = fingerprintProcessed
+            _state.value = State.FingerprintProcessed(fingerprintVisualization)
         }
     }
 
-    fun onFingerprintConfirmed(action: Action) {
-        when (action) {
-            Action.REGISTER -> _state.value = State.TakingUserDetails
-            Action.LOGIN -> analyzeFingerprint()
+    fun onFingerprintConfirmed(userAction: UserAction) {
+        when (userAction) {
+            UserAction.REGISTER -> _state.value = State.TakingUserDetails
+            UserAction.LOGIN -> analyzeFingerprint()
         }
     }
 
     fun registerFingerprint(username: String) = viewModelScope.launch {
         if (username.isEmpty()) return@launch
         val fingerprint = fingerprint ?: return@launch
-        _state.value = State.RegisteringFingerprint
+        _state.value = State.RegisteringFingerprint(fingerprint)
         try {
             val fingerprintName = username + System.currentTimeMillis()
             val uploadFingerprintTask =
@@ -98,7 +94,7 @@ class FingerprintViewModel(
 
     private fun analyzeFingerprint() = viewModelScope.launch {
         val fingerprint = fingerprint ?: return@launch
-        _state.value = State.AnalyzingFingerprint
+        _state.value = State.AnalyzingFingerprint(fingerprint)
         try {
             val fingerprintName = getMatchedFingerprintName(fingerprint)
             if (fingerprintName != null) {
@@ -143,10 +139,10 @@ class FingerprintViewModel(
         object ProcessingFingerprint : State()
         data class FingerprintProcessed(val fingerprint: Bitmap) : State()
         object TakingUserDetails : State()
-        object RegisteringFingerprint : State()
+        data class RegisteringFingerprint(val fingerprint: Bitmap) : State()
         object FingerprintRegisterFailed : State()
         object FingerprintRegistered : State()
-        object AnalyzingFingerprint : State()
+        data class AnalyzingFingerprint(val fingerprint: Bitmap) : State()
         data class LoginAllowed(val username: String) : State()
         object LoginDenied : State()
         object LoginFailed : State()

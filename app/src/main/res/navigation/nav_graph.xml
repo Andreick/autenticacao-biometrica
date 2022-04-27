@@ -21,7 +21,7 @@
         tools:layout="@layout/fragment_fingerprint" >
         <argument
             android:name="action"
-            app:argType="com.andreick.autenticaobiomtrica.Action" />
+            app:argType="com.andreick.autenticaobiomtrica.UserAction" />
         <action
             android:id="@+id/show_user_details_dialog"
             app:destination="@id/userDetailsDialogFragment" />

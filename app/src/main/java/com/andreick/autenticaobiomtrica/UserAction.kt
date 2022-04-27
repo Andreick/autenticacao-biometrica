@@ -1,6 +1,6 @@
 package com.andreick.autenticaobiomtrica
 
-enum class Action {
+enum class UserAction {
     REGISTER,
     LOGIN
 }

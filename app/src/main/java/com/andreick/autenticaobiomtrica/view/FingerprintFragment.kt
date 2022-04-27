@@ -28,7 +28,7 @@ class FingerprintFragment : Fragment() {
 
     private val viewModel: FingerprintViewModel by viewModels {
         FingerprintViewModel.Factory(FingerprintViewModel(
-            FingerprintDetectionJava(), FingerprintMatcher()
+            FingerprintProcessor(), FingerprintMatcher()
         ))
     }
 
@@ -110,8 +110,9 @@ class FingerprintFragment : Fragment() {
                     val direction = FingerprintFragmentDirections.showUserDetailsDialog()
                     findNavController().navigate(direction)
                 }
-                FingerprintViewModel.State.RegisteringFingerprint -> {
+                is FingerprintViewModel.State.RegisteringFingerprint -> {
                     hideButtons()
+                    binding.ivFingerprint.setImageBitmap(state.fingerprint)
                     loading()
                 }
                 FingerprintViewModel.State.FingerprintRegistered -> {
@@ -120,8 +121,9 @@ class FingerprintFragment : Fragment() {
                 FingerprintViewModel.State.FingerprintRegisterFailed -> {
                     onFail("Falha ao registrar a digital")
                 }
-                FingerprintViewModel.State.AnalyzingFingerprint -> {
+                is FingerprintViewModel.State.AnalyzingFingerprint -> {
                     hideButtons()
+                    binding.ivFingerprint.setImageBitmap(state.fingerprint)
                     loading()
                 }
                 is FingerprintViewModel.State.LoginAllowed -> {
