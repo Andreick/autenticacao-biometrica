@@ -29,11 +29,11 @@ class HomeFragment : Fragment() {
 
     private fun setOnClickListeners() {
         binding.btnHomeRegister.setOnClickListener {
-            val action = HomeFragmentDirections.actionTakeFingerprint(Action.REGISTER)
+            val action = HomeFragmentDirections.takeFingerprint(Action.REGISTER)
             findNavController().navigate(action)
         }
         binding.btnHomeLogin.setOnClickListener {
-            val action = HomeFragmentDirections.actionTakeFingerprint(Action.LOGIN)
+            val action = HomeFragmentDirections.takeFingerprint(Action.LOGIN)
             findNavController().navigate(action)
         }
     }

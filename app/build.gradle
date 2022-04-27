@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -49,7 +50,13 @@ dependencies {
 
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
 
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    def coroutines_version = "1.6.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
+
+    implementation platform('com.google.firebase:firebase-bom:29.3.0')
+    implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
 
     def camerax_version = "1.1.0-beta03"
     implementation "androidx.camera:camera-camera2:$camerax_version"

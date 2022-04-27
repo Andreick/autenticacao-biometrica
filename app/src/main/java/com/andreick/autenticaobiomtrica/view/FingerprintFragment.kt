@@ -1,24 +1,18 @@
 package com.andreick.autenticaobiomtrica.view
 
 import android.Manifest
-import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.andreick.autenticaobiomtrica.*
@@ -112,8 +106,8 @@ class FingerprintFragment : Fragment() {
                     showFingerprintProcessedButtons()
                 }
                 FingerprintViewModel.State.TakingUserDetails -> {
-                    val action = FingerprintFragmentDirections.actionShowUserDetailsDialog()
-                    findNavController().navigate(action)
+                    val direction = FingerprintFragmentDirections.showUserDetailsDialog()
+                    findNavController().navigate(direction)
                 }
                 FingerprintViewModel.State.RegisteringFingerprint -> {
                     binding.pbProcessing.visible()
@@ -121,6 +115,11 @@ class FingerprintFragment : Fragment() {
                 FingerprintViewModel.State.FingerprintRegistered -> {
                     binding.pbProcessing.gone()
                     requireContext().showToast("Digital registrada com sucesso")
+                    findNavController().popBackStack()
+                }
+                FingerprintViewModel.State.FingerprintRegisterFailed -> {
+                    binding.pbProcessing.gone()
+                    requireContext().showToast("Falha ao registrar a digital")
                 }
                 FingerprintViewModel.State.AnalyzingFingerprint -> TODO()
                 FingerprintViewModel.State.LoginAllowed -> TODO()

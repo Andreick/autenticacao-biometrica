@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "748695974851",
+    "project_id": "autenticacao-biometrica-4d91c",
+    "storage_bucket": "autenticacao-biometrica-4d91c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748695974851:android:2dfa5f90f72f335db04376",
+        "android_client_info": {
+          "package_name": "com.andreick.autenticaobiomtrica"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748695974851-fn57ihi2nj5f92d5c4nen7bds8a4ut9v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl1fYkV3CK76gacOVtfS25rPuNbyF4tHs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748695974851-fn57ihi2nj5f92d5c4nen7bds8a4ut9v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
