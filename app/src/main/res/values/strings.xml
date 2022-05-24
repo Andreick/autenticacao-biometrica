@@ -9,4 +9,10 @@
     <string name="register">Registrar</string>
     <string name="cancel">Cancelar</string>
     <string name="name">Nome</string>
+    <string name="open">abrir</string>
+    <string name="close">fechar</string>
+
+    <string name="agricultural_producer">Produres Agrícolas</string>
+    <string name="tax_information">Informações Fiscais</string>
+    <string name="pesticides">Agrotóxicos</string>
 </resources>

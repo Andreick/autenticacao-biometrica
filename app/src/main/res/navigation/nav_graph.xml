@@ -21,7 +21,7 @@
         tools:layout="@layout/fragment_fingerprint" >
         <argument
             android:name="action"
-            app:argType="com.andreick.autenticaobiomtrica.UserAction" />
+            app:argType="com.andreick.autenticaobiomtrica.enums.UserAction" />
         <action
             android:id="@+id/show_user_details_dialog"
             app:destination="@id/userDetailsDialogFragment" />
@@ -30,4 +30,9 @@
         android:id="@+id/userDetailsDialogFragment"
         android:name="com.andreick.autenticaobiomtrica.view.UserDetailsDialogFragment"
         android:label="UserDetailsDialogFragment" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.andreick.autenticaobiomtrica.view.InfoFragment"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" />
 </navigation>

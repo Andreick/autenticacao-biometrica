@@ -1,4 +1,4 @@
-package com.andreick.autenticaobiomtrica
+package com.andreick.autenticaobiomtrica.utils
 
 import android.graphics.Bitmap
 import com.andreick.autenticaobiomtrica.extensions.toBitmap
@@ -6,8 +6,9 @@ import com.andreick.autenticaobiomtrica.extensions.toMat
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import java.util.*
+import javax.inject.Inject
 
-class FingerprintProcessor {
+class FingerprintProcessor @Inject constructor() {
 
     fun processImage(input: Bitmap): Pair<Bitmap, Bitmap> {
         val (harrisNormalised, harrisKeyPointsVisualisation) = processImage(input.toMat())
@@ -20,7 +21,7 @@ class FingerprintProcessor {
         val inputBinary = Mat()
         Imgproc.threshold(grayMat, inputBinary, 0.0, 255.0, 8)
 
-        // Now lets detect the strong minutiae using Haris corner detection
+        // Detecta as minúcias mais fortes usando o algoritmo Harris Corner Detector
         val harrisCorners = Mat.zeros(inputBinary.size(), CvType.CV_32FC1)
         Imgproc.cornerHarris(inputBinary, harrisCorners, 2, 3, 0.04, Core.BORDER_DEFAULT)
         val harrisNormalised = Mat()
@@ -33,10 +34,8 @@ class FingerprintProcessor {
             CvType.CV_8UC3
         )
 
-        // Select the strongest corners that you want
-        val thresholdHarris = 125
-
-        // Make a color clone for visualisation purposes
+        // Marca círculos na imagem para fins de visualização
+        val thresholdHarris = 175
         val rescaled = Mat()
         Core.convertScaleAbs(harrisNormalised, rescaled)
         val harrisKeyPointsVisualisation = Mat(rescaled.rows(), rescaled.cols(), CvType.CV_8UC3)
@@ -46,7 +45,7 @@ class FingerprintProcessor {
         for (x in 0 until harrisNormalised.cols()) {
             for (y in 0 until harrisNormalised.rows()) {
                 if (harrisNormalised.get(y, x)[0] > thresholdHarris) {
-                    // Draw or store the keypoint location here, just like you decide. In our case we will store the location of the keypoint
+                    // Desenha a localização da minúcia
                     Imgproc.circle(
                         harrisKeyPointsVisualisation, Point(x.toDouble(), y.toDouble()),
                         5, Scalar(0.0, 255.0, 0.0), 1

@@ -3,26 +3,27 @@ package com.andreick.autenticaobiomtrica.viewmodel
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.*
-import com.andreick.autenticaobiomtrica.FingerprintMatcher
-import com.andreick.autenticaobiomtrica.FingerprintProcessor
-import com.andreick.autenticaobiomtrica.UserAction
+import com.andreick.autenticaobiomtrica.utils.FingerprintMatcher
+import com.andreick.autenticaobiomtrica.utils.FingerprintProcessor
+import com.andreick.autenticaobiomtrica.enums.UserAction
 import com.andreick.autenticaobiomtrica.extensions.toMat
 import com.andreick.autenticaobiomtrica.model.User
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.UploadTask
 import com.google.firebase.storage.ktx.storage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.opencv.core.Mat
 import org.opencv.core.MatOfByte
 import org.opencv.imgcodecs.Imgcodecs
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
-class FingerprintViewModel(
+@HiltViewModel
+class FingerprintViewModel @Inject constructor(
     private val fingerprintProcessor: FingerprintProcessor,
     private val fingerprintMatcher: FingerprintMatcher
 ) : ViewModel() {
@@ -52,22 +53,15 @@ class FingerprintViewModel(
         }
     }
 
-    fun onFingerprintConfirmed(userAction: UserAction) {
-        when (userAction) {
-            UserAction.REGISTER -> _state.value = State.TakingUserDetails
-            UserAction.LOGIN -> analyzeFingerprint()
-        }
-    }
-
-    fun registerFingerprint(username: String) = viewModelScope.launch {
-        if (username.isEmpty()) return@launch
+    fun registerFingerprint(user: User) = viewModelScope.launch {
+        if (user.name.isEmpty()) return@launch
         val fingerprint = fingerprint ?: return@launch
         _state.value = State.RegisteringFingerprint(fingerprint)
         try {
-            val fingerprintName = username + System.currentTimeMillis()
+            val fingerprintName = user.name + System.currentTimeMillis()
             val uploadFingerprintTask =
                 uploadImageToStorage(fingerprint, FINGERPRINTS_FOLDER, fingerprintName)
-            val saveUserTask = saveUserToFirestore(username, fingerprintName)
+            val saveUserTask = userCollectionRef.add(user.copy(fingerprintName = fingerprintName))
             uploadFingerprintTask.await()
             saveUserTask.await()
             _state.value = State.FingerprintRegistered
@@ -87,9 +81,11 @@ class FingerprintViewModel(
         return Firebase.storage.reference.child(filePath + fileName).putBytes(stream.toByteArray())
     }
 
-    private fun saveUserToFirestore(username: String, fingerprintName: String): Task<DocumentReference> {
-        val user = User(username, fingerprintName)
-        return userCollectionRef.add(user)
+    fun onFingerprintConfirmed(userAction: UserAction) {
+        when (userAction) {
+            UserAction.REGISTER -> _state.value = State.TakingUserDetails
+            UserAction.LOGIN -> analyzeFingerprint()
+        }
     }
 
     private fun analyzeFingerprint() = viewModelScope.launch {
@@ -146,14 +142,6 @@ class FingerprintViewModel(
         data class LoginAllowed(val username: String) : State()
         object LoginDenied : State()
         object LoginFailed : State()
-    }
-
-    class Factory(private val fingerprintViewModel: FingerprintViewModel) :
-        ViewModelProvider.Factory {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return fingerprintViewModel as T
-        }
     }
 
     companion object {

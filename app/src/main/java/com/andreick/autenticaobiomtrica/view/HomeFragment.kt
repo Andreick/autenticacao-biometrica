@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.andreick.autenticaobiomtrica.UserAction
+import com.andreick.autenticaobiomtrica.enums.UserAction
 import com.andreick.autenticaobiomtrica.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {

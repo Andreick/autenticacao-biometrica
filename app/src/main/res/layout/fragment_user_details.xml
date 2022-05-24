@@ -29,9 +29,8 @@
         android:layout_marginEnd="16dp"
         android:text="@string/cancel"
         app:layout_constraintEnd_toStartOf="@+id/btn_user_details_register"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_user_details_name" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_details_role" />
 
     <Button
         android:id="@+id/btn_user_details_register"
@@ -39,7 +38,27 @@
         android:layout_height="wrap_content"
         android:text="@string/register"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_user_details_cancel"
         app:layout_constraintTop_toTopOf="@+id/btn_user_details_cancel" />
+
+    <Spinner
+        android:id="@+id/spinner_user_details_roles"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_user_details_role"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_user_details_role"
+        app:layout_constraintTop_toTopOf="@+id/tv_user_details_role" />
+
+    <TextView
+        android:id="@+id/tv_user_details_role"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:text="Cargo:"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_user_details_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

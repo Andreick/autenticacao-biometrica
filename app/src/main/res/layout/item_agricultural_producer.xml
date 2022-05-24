@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_label_unit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unidade Produtora:"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_unit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@id/tv_label_unit_name"
+        app:layout_constraintTop_toTopOf="@id/tv_label_unit_name" />
+
+    <TextView
+        android:id="@+id/tv_unit_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:inputType="textMultiLine"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_label_unit_name"
+        tools:text="Endereço:" />
+
+    <TextView
+        android:id="@+id/tv_label_unit_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Produtos Produzidos:"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_unit_address" />
+
+    <TextView
+        android:id="@+id/tv_unit_products"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@id/tv_label_unit_products"
+        app:layout_constraintTop_toTopOf="@id/tv_label_unit_products" />
+
+    <TextView
+        android:id="@+id/tv_label_annual_production"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Produção Anual (kg):"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_unit_products" />
+
+    <TextView
+        android:id="@+id/tv_annual_production"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@id/tv_label_annual_production"
+        app:layout_constraintTop_toTopOf="@id/tv_label_annual_production" />
+
+    <TextView
+        android:id="@+id/tv_label_production_destination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Destino da Produção:"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_annual_production" />
+
+    <TextView
+        android:id="@+id/tv_production_destination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@id/tv_label_production_destination"
+        app:layout_constraintTop_toTopOf="@id/tv_label_production_destination" />
+
+    <TextView
+        android:id="@+id/tv_label_unit_headcount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Número de Empregados:"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_production_destination" />
+
+    <TextView
+        android:id="@+id/tv_unit_headcount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@id/tv_label_unit_headcount"
+        app:layout_constraintTop_toTopOf="@id/tv_label_unit_headcount" />
+
+    <TextView
+        android:id="@+id/tv_label_agricultural_machinery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quantidade de Máquinas e Implementos Agrícolas:"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_unit_headcount" />
+
+    <TextView
+        android:id="@+id/tv_agricultural_machinery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@id/tv_label_agricultural_machinery"
+        app:layout_constraintTop_toTopOf="@id/tv_label_agricultural_machinery" />
+
+    <TextView
+        android:id="@+id/tv_label_unit_automation_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nível de Automação:"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_label_agricultural_machinery" />
+
+    <TextView
+        android:id="@+id/tv_unit_automation_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@id/tv_label_unit_automation_level"
+        app:layout_constraintTop_toTopOf="@id/tv_label_unit_automation_level" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,12 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/activity_test.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/dialog_user_details.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/fragment_fingerprint.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/fragment_home.xml" value="0.33" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/fragment_info.xml" value="0.337037037037037" />
         <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/fragment_item_list.xml" value="0.17395833333333333" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/fragment_user_details.xml" value="0.67" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/info_fragment.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/item_agricultural_producer.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/nav_header_info.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/layout/nav_view_info_header.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/menu/nav_drawer_info_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Andreick/Documents/UNIP/6Sem/APS/AutenticacaoBiometrica/app/src/main/res/menu/nav_view_info_menu.xml" value="0.18802083333333333" />
       </map>
     </option>
   </component>

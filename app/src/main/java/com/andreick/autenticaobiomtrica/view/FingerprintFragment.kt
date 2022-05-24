@@ -15,22 +15,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.andreick.autenticaobiomtrica.*
+import com.andreick.autenticaobiomtrica.R
 import com.andreick.autenticaobiomtrica.databinding.FragmentFingerprintBinding
 import com.andreick.autenticaobiomtrica.extensions.*
+import com.andreick.autenticaobiomtrica.model.User
 import com.andreick.autenticaobiomtrica.viewmodel.FingerprintViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FingerprintFragment : Fragment() {
 
     private lateinit var binding: FragmentFingerprintBinding
 
     private val args: FingerprintFragmentArgs by navArgs()
 
-    private val viewModel: FingerprintViewModel by viewModels {
-        FingerprintViewModel.Factory(FingerprintViewModel(
-            FingerprintProcessor(), FingerprintMatcher()
-        ))
-    }
+    private val viewModel: FingerprintViewModel by viewModels()
 
     private val requestPermissions = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -44,9 +43,9 @@ class FingerprintFragment : Fragment() {
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         )
                         openGalleryLauncher.launch(pickIntent)
-                        showToast("Escolha a imagem da sua digital")
+                        showLongToast("Escolha a imagem da sua digital")
                     } else {
-                        showToast("Permissão necessária para tirar a digital")
+                        showShortToast("Permissão necessária para tirar a digital")
                         findNavController().popBackStack()
                     }
                 }
@@ -127,7 +126,9 @@ class FingerprintFragment : Fragment() {
                     loading()
                 }
                 is FingerprintViewModel.State.LoginAllowed -> {
-                    onSuccess("Bem vindo ${state.username}!")
+                    showLongToast("Bem vindo ${state.username}!")
+                    findNavController().navigate(R.id.infoFragment)
+                    enableInput()
                 }
                 FingerprintViewModel.State.LoginDenied -> {
                     onFail("Sua digital não foi identificada, tente novamente")
@@ -140,14 +141,14 @@ class FingerprintFragment : Fragment() {
     }
 
     private fun onSuccess(message: String) {
-        showToast(message)
+        showLongToast(message)
         findNavController().popBackStack()
         enableInput()
     }
 
     private fun onFail(message: String) {
         loadingFinished()
-        showToast(message)
+        showLongToast(message)
         showFingerprintProcessedButtons()
     }
 
@@ -170,8 +171,8 @@ class FingerprintFragment : Fragment() {
 
     private fun setBackStackEntryObserver() {
         findNavController().getBackStackEntry(R.id.fingerprintFragment)
-            .savedStateHandle.getLiveData<String>("name")
-            .observe(viewLifecycleOwner) { name -> viewModel.registerFingerprint(name) }
+            .savedStateHandle.getLiveData<User>("user")
+            .observe(viewLifecycleOwner) { user -> viewModel.registerFingerprint(user) }
     }
 
     private fun loading() {

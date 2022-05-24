@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.andreick.autenticaobiomtrica.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 import org.opencv.android.OpenCVLoader
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
